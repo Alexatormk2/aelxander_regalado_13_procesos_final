@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2020-11-11T19:57:32.633507200Z</date>
+  <millis>1605124652633</millis>
+  <nanos>507200</nanos>
+  <sequence>0</sequence>
+  <logger>MyLog</logger>
+  <level>INFO</level>
+  <class>ejer1</class>
+  <method>&lt;init&gt;</method>
+  <thread>1</thread>
+  <message>Se ha conectado el usuario: eee</message>
+</record>
+<record>
+  <date>2020-11-11T19:57:42.849147300Z</date>
+  <millis>1605124662849</millis>
+  <nanos>147300</nanos>
+  <sequence>1</sequence>
+  <logger>MyLog</logger>
+  <level>INFO</level>
+  <class>ejer1</class>
+  <method>&lt;init&gt;</method>
+  <thread>1</thread>
+  <message>El cliente quiere leer el fichero: log_actividad.log</message>
+</record>
+<record>
+  <date>2020-11-11T19:57:42.859143Z</date>
+  <millis>1605124662859</millis>
+  <nanos>143000</nanos>
+  <sequence>2</sequence>
+  <logger>MyLog</logger>
+  <level>INFO</level>
+  <class>ejer1</class>
+  <method>mostrar_fichero</method>
+  <thread>1</thread>
+  <message>	El fichero se ha visualizado correctamente</message>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2020-11-11T19:57:58.561414700Z</date>
+  <millis>1605124678561</millis>
+  <nanos>414700</nanos>
+  <sequence>0</sequence>
+  <logger>MyLog</logger>
+  <level>INFO</level>
+  <class>ejer1</class>
+  <method>&lt;init&gt;</method>
+  <thread>1</thread>
+  <message>Se ha conectado el usuario: dd</message>
+</record>
+<record>
+  <date>2020-11-11T19:58:40.236370500Z</date>
+  <millis>1605124720236</millis>
+  <nanos>370500</nanos>
+  <sequence>1</sequence>
+  <logger>MyLog</logger>
+  <level>INFO</level>
+  <class>ejer1</class>
+  <method>&lt;init&gt;</method>
+  <thread>1</thread>
+  <message>El cliente quiere leer el fichero: log_actividad.log</message>
+</record>
+<record>
+  <date>2020-11-11T19:58:40.247367500Z</date>
+  <millis>1605124720247</millis>
+  <nanos>367500</nanos>
+  <sequence>2</sequence>
+  <logger>MyLog</logger>
+  <level>INFO</level>
+  <class>ejer1</class>
+  <method>mostrar_fichero</method>
+  <thread>1</thread>
+  <message>	El fichero se ha visualizado correctamente</message>
+</record>
+</log>
