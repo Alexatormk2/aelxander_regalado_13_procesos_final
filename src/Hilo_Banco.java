@@ -22,6 +22,7 @@ import javax.crypto.NoSuchPaddingException;
 public class Hilo_Banco extends Thread{
 
     Socket c=new Socket();
+String mensaje;
 
 
     public Hilo_Banco(Socket c) {

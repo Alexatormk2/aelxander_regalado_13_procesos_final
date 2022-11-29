@@ -1,4 +1,4 @@
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.InvalidKeyException;
@@ -10,10 +10,10 @@ import javax.crypto.NoSuchPaddingException;
 
 public class Server_Banco {
 
-    final static int   puerto = 5500;
+    final static int puerto = 5500;
 
- public    static Cuenta[] cuentas = new Cuenta[220];
-
+    public static Cuenta[] ListaCuentas = new Cuenta[220];
+    public static Usuarios[] ListaUsuarios = new Usuarios[220];
 
 
     public static void main(String[] args) throws NoSuchAlgorithmException, IOException, ClassNotFoundException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
@@ -22,20 +22,75 @@ public class Server_Banco {
         Socket c;
         s = new ServerSocket(5000);
         System.out.println("Servidor iniciado");
+        cargarCuentas();
         while (true) {
             c = s.accept(); //esperando cliente
             Hilo_Banco hiloBanco = new Hilo_Banco(c);
             hiloBanco.start();
+            guardarCuentaDat();
         }
 
     }
 
-    public void guardarCuentaDat(){
-
-
-
+    public static void guardarCuentaDat() {
 
 
     }
-    public void cargarCuentas(){}
+
+    public static void cargarCuentas() throws IOException {
+//Carga los datos de los dat de usuario a las listas para usarlos despues
+        File ficheroUser = new File("usuarios.dat");
+        FileInputStream fileDEntro = new FileInputStream(ficheroUser);
+        ObjectInputStream dataGET = new ObjectInputStream(fileDEntro);
+        int aj = 0;
+        try {
+            while (true) {
+
+                Usuarios usuarios = (Usuarios) dataGET.readObject();
+                String nombre = usuarios.getNombre();
+                String user = usuarios.getUsuario();
+                int edad = usuarios.getEdad();
+                String contra = usuarios.getContraseina();
+                String email = usuarios.getEmail();
+                Usuarios a = new Usuarios(nombre, user, contra, edad, email);
+                ListaUsuarios[aj] = a;
+                aj++;
+
+            }
+        } catch (EOFException e) {
+            System.out.println(" Fin de la carga de carros");
+
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        dataGET.close();
+
+
+        //Carga de las cuentas
+
+        File ficheroCuenta = new File("usuarios.dat");
+        FileInputStream fileDEntroCuenta = new FileInputStream(ficheroCuenta);
+        ObjectInputStream dataGETCuenta = new ObjectInputStream(fileDEntroCuenta);
+        int ax = 0;
+        try {
+            while (true) {
+
+                Cuenta cuenta = (Cuenta) dataGETCuenta.readObject();
+                String idCuenta = cuenta.getIdCuenta();
+                double saldo = cuenta.getSaldo();
+
+
+                Cuenta c = new Cuenta(saldo, idCuenta);
+                ListaCuentas[ax] = c;
+                aj++;
+
+            }
+        } catch (EOFException e) {
+            System.out.println(" Fin de la carga de carros");
+
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        dataGETCuenta.close();
+    }
 }
