@@ -1,4 +1,6 @@
-public class Cuenta {
+import java.io.Serializable;
+
+public class Cuenta implements Serializable {
 
     double saldo;
     String idCuenta;

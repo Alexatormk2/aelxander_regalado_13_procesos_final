@@ -12,6 +12,7 @@ public class Server_Banco {
 
     final static int   puerto = 5500;
 
+ public    static Cuenta[] cuentas = new Cuenta[220];
 
 
 
@@ -29,6 +30,12 @@ public class Server_Banco {
 
     }
 
-    public void guardarCuentaDat(){}
+    public void guardarCuentaDat(){
+
+
+
+
+
+    }
     public void cargarCuentas(){}
 }
