@@ -29,4 +29,6 @@ public class Server_Banco {
 
     }
 
+    public void guardarCuentaDat(){}
+    public void cargarCuentas(){}
 }
