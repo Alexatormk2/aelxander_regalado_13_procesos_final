@@ -17,6 +17,7 @@ public class Crear_DATS {
         itemCuenta.writeObject(cuenta);
         itemCuenta.writeObject(cuenta2);
         itemCuenta.writeObject(cuenta3);
+        itemCuenta.close();
 //crear usuarios por defecto
 
         File ficheroUser = new File("usuarios.dat");
@@ -29,6 +30,7 @@ public class Crear_DATS {
 
         itemUser.writeObject(usuarios);
         itemUser.writeObject(usuarios2);
+        itemUser.close();
 
     }
 

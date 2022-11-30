@@ -57,11 +57,13 @@ public class Hilo_Banco extends Thread {
                     //mandamos la clave publica
                     oos.writeObject(publica);
                     System.out.println("Enviamos la clave publica cuyo valor es: " + publica);
+                    System.out.println("mensaje antes de enviar");
+                    mensajeUTF = "Saludos querido cliente por favor inicio sesion(1) o cree usuario nuevo y cuenta nueva(2) o salga(3) de el numero correspondiente a la opcion";
+                    System.out.println("mensaje enviado");
+                    oos.writeObject(mensajeUTF);
 
-                    oos.writeUTF(mensajeUTF = "Saludos querido cliente por favor inicio sesion(1) o cree usuario nuevo y cuenta nueva(2) o salga(3) de el numero correspondiente a la opcion");
-
-
-                    opcion = ois.readInt();
+                    System.out.println("esperar int para switch");
+                    opcion = (int) ois.readObject();
 
 
                     switch (opcion) {
@@ -70,7 +72,7 @@ public class Hilo_Banco extends Thread {
                             break;
                         case 2:
                             System.out.println("opcion 2 sin hacer");
-                            oos.writeUTF(mensajeUTF = "Opcion 2 en obras");
+                            oos.writeObject(mensajeUTF = "Opcion 2 en obras");
                             break;
                         case 3:
                             System.out.println("Desconectando usuario.....");
@@ -84,7 +86,7 @@ public class Hilo_Banco extends Thread {
                     System.out.println("Error inesperado");
                 } catch (NumberFormatException e) {
                     System.out.println("Se esperaba un numero");
-                    oos.writeUTF(mensajeUTF = "Se esperaba un numero ,no un caracter no numerico o numero decimal revise por favor");
+                    oos.writeObject(mensajeUTF = "Se esperaba un numero ,no un caracter no numerico o numero decimal revise por favor");
                 }
 
                 //recibimos texto encriptado del cliente
@@ -125,7 +127,7 @@ public class Hilo_Banco extends Thread {
     }
 
     public void inicioSesion() throws IOException, NoSuchAlgorithmException {
-
+        try {
 
         //Generamos el par de claves
         KeyPairGenerator keygen;
@@ -137,25 +139,36 @@ public class Hilo_Banco extends Thread {
         PrivateKey privada = par.getPrivate();
         PublicKey publica = par.getPublic();
         //mandamos la clave publica
+            System.out.println("Mandando cla clave2");
         oos.writeObject(publica);
         ///////////////////////////
         String contra;
-        oos.writeUTF(mensajeUTF = "Selecciona uno de estos usuarios");
-        for (int k = 0; k < Server_Banco.ListaUsuarios.length; k++) {
-            oos.writeUTF(mensajeUTF = k + "__" + Server_Banco.ListaUsuarios[k].nombre);
 
+        oos.writeObject(mensajeUTF = "Selecciona uno de estos usuarios");
+            System.out.println(mensajeUTF);
+        for (int k = 0; k < Server_Banco.ListaUsuarios.length; k++) {
+            if (Server_Banco.ListaUsuarios[k] == null) {
+                break;
+            } else {
+
+                oos.writeObject(mensajeUTF = k + "__" + Server_Banco.ListaUsuarios[k].nombre);
+                System.out.println(mensajeUTF);
+            }
         }
-        try {
-            int opcionUser = Integer.parseInt(br.readLine());
+            System.out.println("Recibimos int del usuario");
+
+            int opcionUser;
+                    opcionUser = (int) ois.readObject();
+            System.out.println("se a recibido_____" + opcionUser);
             if (Server_Banco.ListaUsuarios[opcionUser] == null) {
 
-                oos.writeUTF(mensajeUTF = "Ese valor no es valido tiene que ser uno de los numeros listados arriba, volviendo al menu principal");
+                oos.writeObject(mensajeUTF = "Ese valor no es valido tiene que ser uno de los numeros listados arriba, volviendo al menu principal");
             } else {
                 Server_Banco.usuarioAactual = Server_Banco.ListaUsuarios[opcionUser];
-                oos.writeUTF(mensajeUTF = "Por favor introduce la contraseña del usuario:");
+
+
                 byte[] mensaje = (byte[]) ois.readObject();
                 //preparamos el Cipher para descifrar
-
 
                 Cipher descipher = Cipher.getInstance("RSA");
                 descipher.init(Cipher.DECRYPT_MODE, privada);
@@ -164,10 +177,12 @@ public class Hilo_Banco extends Thread {
 
                 if (mensaje_descifrado.equals(Server_Banco.usuarioAactual.contraseina)) {
 
-                    oos.writeUTF(mensajeUTF = "Inicio de sesion con exicto bienvenido: " + Server_Banco.usuarioAactual.nombre);
+                    oos.writeObject(mensajeUTF = "Inicio de sesion con exicto bienvenido: " + Server_Banco.usuarioAactual.nombre);
+                    System.out.println(mensaje_descifrado);
                 } else {
 
-                    oos.writeUTF(mensajeUTF = " Error contraseina incorrecta, volviendo a menu principal");
+                    oos.writeObject(mensajeUTF = " Error contraseina incorrecta, volviendo a menu principal");
+                    System.out.println(mensajeUTF);
                 }
             }
 

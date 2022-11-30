@@ -23,7 +23,7 @@ public class Server_Banco {
         Socket c;
         s = new ServerSocket(puerto);
         System.out.println("Servidor iniciado");
-       cargarUsuarioss();
+        cargarUsuarioss();
         while (true) {
             c = s.accept(); //esperando cliente
             Hilo_Banco hiloBanco = new Hilo_Banco(c);
@@ -53,8 +53,13 @@ public class Server_Banco {
                 int edad = usuarios.getEdad();
                 String contra = usuarios.getContraseina();
                 String email = usuarios.getEmail();
+                System.out.println(nombre + "  " + " " + user);
                 Usuarios a = new Usuarios(nombre, user, contra, edad, email);
+
+
                 ListaUsuarios[aj] = a;
+                int ka = ListaUsuarios.length;
+                System.out.println("Lista ===" + ka );
                 aj++;
 
             }
@@ -76,7 +81,7 @@ public class Server_Banco {
         try {
             while (true) {
 
-              Cuenta cuenta = (Cuenta) dataGETCuenta.readObject();
+                Cuenta cuenta = (Cuenta) dataGETCuenta.readObject();
                 String idCuenta = cuenta.getIdCuenta();
                 double saldo = cuenta.getSaldo();
 
