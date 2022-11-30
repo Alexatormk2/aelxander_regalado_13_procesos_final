@@ -4,6 +4,7 @@ import java.net.Socket;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
+import java.util.Objects;
 import java.util.Scanner;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -35,11 +36,11 @@ public class Cliente_Banco {
         //escribimos opcion del menu
         System.out.println("Escribe el numero de la opcion");
         int opcion = Integer.parseInt(br.readLine());
-        oos.writeObject(opcion);
+
         System.out.println("opcion mandada");
 
         if (opcion == 3) {
-
+            oos.writeObject(opcion);
             System.out.println("Cerrando sesion.........");
             oos.close();
             ois.close();
@@ -49,22 +50,50 @@ public class Cliente_Banco {
 
             oos.writeObject(opcion);
             ///recibmimos clave 2
+
+            ////////////////////////////////////////
+            System.out.println("clave2 recibida");
             PublicKey clave2 = (PublicKey) ois.readObject();
+            /////////////////////////////////
             System.out.println("Cargando menu inicio sesion");
+
             mensaje = ois.readObject().toString();
             System.out.println(mensaje);
 
             ///leemoms uusarios
-            System.out.println();
-            for (int k = 0; k < Server_Banco.ListaUsuarios.length; k++) {
-                mensaje = ois.readObject().toString();
+            System.out.println("Leer usuarios");
+            System.out.println("antes del for");
+            int countador = 0;
+            mensaje = ois.readObject().toString();
+            while (!mensaje.equals("salir")) {
                 System.out.println(mensaje);
+                mensaje = ois.readObject().toString();
+
+
+               // System.out.println(mensaje);
+                System.out.println(countador + "contando");
+                countador++;
+                System.out.println(" the end of while");
+
+                //    for (int k = 0; k < 120; k++) {
+
+
             }
-            opcion = Integer.parseInt(br.readLine());
-            oos.writeObject(opcion);
+            //  }
+
+            System.out.println("da dato para mandar");
+
+            int opcion2 = Integer.parseInt(br.readLine());
+            System.out.println("mandamos seleccion");
+            oos.writeObject(opcion2);
+            System.out.println("leemos siguietne paso");
             mensaje = ois.readObject().toString();
             System.out.println(mensaje);
+
+
         }
+
+
         //Ciframos con la clave publica
 
         System.out.println("Escribe texto para cifrar con clave publica del servidor");

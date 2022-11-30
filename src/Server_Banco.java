@@ -9,7 +9,7 @@ import javax.crypto.NoSuchPaddingException;
 
 
 public class Server_Banco {
-
+  public static   int usuariosRegistrados = 0;
     final static int puerto = 5500;
 
     public static Cuenta[] ListaCuentas = new Cuenta[220];
@@ -59,8 +59,10 @@ public class Server_Banco {
 
                 ListaUsuarios[aj] = a;
                 int ka = ListaUsuarios.length;
-                System.out.println("Lista ===" + ka );
+                System.out.println("Lista ===" + ka);
                 aj++;
+                usuariosRegistrados++;
+                System.out.println("total usuarios----" + usuariosRegistrados);
 
             }
         } catch (EOFException e) {

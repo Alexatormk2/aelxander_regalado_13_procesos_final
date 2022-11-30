@@ -64,6 +64,7 @@ public class Hilo_Banco extends Thread {
 
                     System.out.println("esperar int para switch");
                     opcion = (int) ois.readObject();
+                    System.out.println(opcion + "_____se a recibido para le switch");
 
 
                     switch (opcion) {
@@ -129,36 +130,42 @@ public class Hilo_Banco extends Thread {
     public void inicioSesion() throws IOException, NoSuchAlgorithmException {
         try {
 
-        //Generamos el par de claves
-        KeyPairGenerator keygen;
+            //Generamos el par de claves
+            KeyPairGenerator keygen;
 
-        keygen = KeyPairGenerator.getInstance("RSA");
+            keygen = KeyPairGenerator.getInstance("RSA");
 
-        System.out.println("Generando par de claves");
-        KeyPair par = keygen.generateKeyPair();
-        PrivateKey privada = par.getPrivate();
-        PublicKey publica = par.getPublic();
-        //mandamos la clave publica
+            System.out.println("Generando par de claves");
+            KeyPair par = keygen.generateKeyPair();
+            PrivateKey privada = par.getPrivate();
+            PublicKey publica = par.getPublic();
+            //mandamos la clave publica
             System.out.println("Mandando cla clave2");
-        oos.writeObject(publica);
-        ///////////////////////////
-        String contra;
+            oos.writeObject(publica);
+            ///////////////////////////
+            String contra;
 
-        oos.writeObject(mensajeUTF = "Selecciona uno de estos usuarios");
+            oos.writeObject(mensajeUTF = "Selecciona uno de estos usuarios");
             System.out.println(mensajeUTF);
-        for (int k = 0; k < Server_Banco.ListaUsuarios.length; k++) {
-            if (Server_Banco.ListaUsuarios[k] == null) {
-                break;
-            } else {
+            System.out.println("cargando for usuarios");
 
-                oos.writeObject(mensajeUTF = k + "__" + Server_Banco.ListaUsuarios[k].nombre);
-                System.out.println(mensajeUTF);
+            for (int k = 0; k < Server_Banco.ListaUsuarios.length; k++) {
+                if (Server_Banco.ListaUsuarios[k] == null) {
+                    System.out.println("null ser");
+
+                    break;
+                } else {
+                    oos.writeObject(mensajeUTF = k + "__" + Server_Banco.ListaUsuarios[k].nombre);
+                    System.out.println(mensajeUTF);
+                    System.out.println(k + "__Contando");
+                }
             }
-        }
+            oos.writeObject(mensajeUTF = "salir");
             System.out.println("Recibimos int del usuario");
 
-            int opcionUser;
-                    opcionUser = (int) ois.readObject();
+            int opcionUser = 0;
+            System.out.println("opcion user ==" + opcionUser);
+            opcionUser = (int) ois.readObject();
             System.out.println("se a recibido_____" + opcionUser);
             if (Server_Banco.ListaUsuarios[opcionUser] == null) {
 
