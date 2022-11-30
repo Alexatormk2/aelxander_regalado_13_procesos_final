@@ -14,6 +14,7 @@ public class Server_Banco {
 
     public static Cuenta[] ListaCuentas = new Cuenta[220];
     public static Usuarios[] ListaUsuarios = new Usuarios[220];
+    public static Usuarios usuarioAactual;
 
 
     public static void main(String[] args) throws NoSuchAlgorithmException, IOException, ClassNotFoundException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
@@ -92,5 +93,41 @@ public class Server_Banco {
             throw new RuntimeException(e);
         }
         dataGETCuenta.close();
+    }
+
+
+    //guardado de cuentas
+
+
+    public static void guardarDatosUsuario() throws IOException {
+        //Coge los datos de las listas los vuelve a meter al dat
+        File ficheroUsuarios = new File("usuarios.dat");
+        FileOutputStream escribirUser = new FileOutputStream(ficheroUsuarios);
+        ObjectOutputStream itemUser = new ObjectOutputStream(escribirUser);
+        Usuarios surv = usuarioAactual;
+        itemUser.writeObject(usuarioAactual);
+        for (int a = 0; a < ListaUsuarios.length; a++) {
+
+            if (ListaUsuarios[a] == null) {
+                System.out.println("No hya usuarios para guardar o ya estan todos");
+                break;
+            } else if (ListaUsuarios[a] == usuarioAactual) {
+
+                try {
+                    ListaUsuarios[a] = usuarioAactual;
+                } catch (Exception e) {
+                    System.out.println("Error inesperado");
+                }
+
+            }
+            usuarioAactual = ListaUsuarios[a];
+            if (ListaUsuarios[a] == surv) {
+                continue;
+            } else {
+                itemUser.writeObject(ListaUsuarios[a]);
+            }
+        }
+
+
     }
 }
