@@ -21,9 +21,9 @@ public class Server_Banco {
 
         ServerSocket s;
         Socket c;
-        s = new ServerSocket(5000);
+        s = new ServerSocket(puerto);
         System.out.println("Servidor iniciado");
-        cargarCuentas();
+       cargarUsuarioss();
         while (true) {
             c = s.accept(); //esperando cliente
             Hilo_Banco hiloBanco = new Hilo_Banco(c);
@@ -38,7 +38,7 @@ public class Server_Banco {
 
     }
 
-    public static void cargarCuentas() throws IOException {
+    public static void cargarUsuarioss() throws IOException {
 //Carga los datos de los dat de usuario a las listas para usarlos despues
         File ficheroUser = new File("usuarios.dat");
         FileInputStream fileDEntro = new FileInputStream(ficheroUser);
@@ -59,7 +59,7 @@ public class Server_Banco {
 
             }
         } catch (EOFException e) {
-            System.out.println(" Fin de la carga de carros");
+            System.out.println(" Fin de la carga de usuarios");
 
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
@@ -69,14 +69,14 @@ public class Server_Banco {
 
         //Carga de las cuentas
 
-        File ficheroCuenta = new File("usuarios.dat");
+        File ficheroCuenta = new File("cuenta.dat");
         FileInputStream fileDEntroCuenta = new FileInputStream(ficheroCuenta);
         ObjectInputStream dataGETCuenta = new ObjectInputStream(fileDEntroCuenta);
         int ax = 0;
         try {
             while (true) {
 
-                Cuenta cuenta = (Cuenta) dataGETCuenta.readObject();
+              Cuenta cuenta = (Cuenta) dataGETCuenta.readObject();
                 String idCuenta = cuenta.getIdCuenta();
                 double saldo = cuenta.getSaldo();
 
@@ -87,7 +87,7 @@ public class Server_Banco {
 
             }
         } catch (EOFException e) {
-            System.out.println(" Fin de la carga de carros");
+            System.out.println(" Fin de la carga de datos");
 
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
