@@ -1,21 +1,19 @@
 
 
+import com.neovisionaries.i18n.CountryCode;
+import ibanGenerator.IBANGenerator;
 
-import java.io.*;
-import java.net.Socket;
-import java.security.InvalidKeyException;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.util.IllegalFormatCodePointException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import java.io.*;
+import java.net.Socket;
+import java.security.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class Hilo_Banco extends Thread {
@@ -172,7 +170,7 @@ public class Hilo_Banco extends Thread {
                 oos.writeObject(mensajeUTF = "Ese valor no es valido tiene que ser uno de los numeros listados arriba, volviendo al menu principal");
             } else {
                 Server_Banco.usuarioAactual = Server_Banco.ListaUsuarios[opcionUser];
-
+                oos.writeObject(mensajeUTF = "Da la contraseña del usuario");
 
                 byte[] mensaje = (byte[]) ois.readObject();
                 //preparamos el Cipher para descifrar
@@ -186,6 +184,9 @@ public class Hilo_Banco extends Thread {
 
                     oos.writeObject(mensajeUTF = "Inicio de sesion con exicto bienvenido: " + Server_Banco.usuarioAactual.nombre);
                     System.out.println(mensaje_descifrado);
+
+                    int opcionMenu = 0;
+
                 } else {
 
                     oos.writeObject(mensajeUTF = " Error contraseina incorrecta, volviendo a menu principal");
@@ -211,6 +212,21 @@ public class Hilo_Banco extends Thread {
             throw new RuntimeException(e);
         }
     }
+
+   public void CrearCuentasUser() throws IOException {
+
+
+
+
+        oos.writeObject(mensajeUTF="Se esta generando el iban de la cuenta espere");
+       IBANGenerator ibanGenerator = new IBANGenerator();
+       System.out.println(ibanGenerator.generateIBAN("Austria"));
+
+
+
+
+   }
+
 
 }
 

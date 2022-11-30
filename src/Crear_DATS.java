@@ -1,18 +1,20 @@
+import ibanGenerator.IBANGenerator;
+
 import java.io.*;
 
 public class Crear_DATS {
 
 
     public static void main(String[] args) throws IOException {
-
+        IBANGenerator ibanGenerator = new IBANGenerator();
         //crear Cuenta
         File fichero = new File("cuenta.dat");
         FileOutputStream escribirCuenta = new FileOutputStream(fichero);
         ObjectOutputStream itemCuenta = new ObjectOutputStream(escribirCuenta);
 
-        Cuenta cuenta = new Cuenta(999999999, "K91M31");
-        Cuenta cuenta2 = new Cuenta(2033, "LOA3S1");
-        Cuenta cuenta3 = new Cuenta(39323, "PL2332");
+        Cuenta cuenta = new Cuenta(999999999, ibanGenerator.generateIBAN("Austria"));
+        Cuenta cuenta2 = new Cuenta(2033, ibanGenerator.generateIBAN("Austria"));
+        Cuenta cuenta3 = new Cuenta(39323, ibanGenerator.generateIBAN("Austria"));
 
         itemCuenta.writeObject(cuenta);
         itemCuenta.writeObject(cuenta2);
