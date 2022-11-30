@@ -130,4 +130,33 @@ public class Server_Banco {
 
 
     }
+
+    public static void guardarDatosCuentas() throws IOException {
+        //Coge los datos de las listas los vuelve a meter al dat
+        File ficheroCuenta = new File(".//BOT.dat");
+        FileOutputStream escribirCuenta = new FileOutputStream(ficheroCuenta);
+        ObjectOutputStream itemCuenta = new ObjectOutputStream(escribirCuenta);
+
+
+        for (int a = 0; a < ListaCuentas.length; a++) {
+
+            if (ListaCuentas[a] == null) {
+                System.out.println("Lista de bot guardada");
+                break;
+            } else {
+
+                try {
+                    itemCuenta.writeObject(ListaCuentas[a]);
+
+                } catch (Exception e) {
+                    System.out.println("Error inesperado");
+                }
+
+
+            }
+
+        }
+
+
+    }
 }
