@@ -25,9 +25,10 @@ public class Cliente_Banco {
             // Creamos los flujos
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+            PublicKey clave = (PublicKey) ois.readObject();
             System.out.println("Leemos la clave");
             //obtenemos la clave publica
-            PublicKey clave = (PublicKey) ois.readObject();
+
             System.out.println("La clave recibida es: " + clave);
 
 
@@ -54,7 +55,7 @@ public class Cliente_Banco {
                 oos.writeObject(opcion);
 
 
-                switch (opcion){
+                switch (opcion) {
 
                     case 1:
 
@@ -102,8 +103,63 @@ public class Cliente_Banco {
 
                         break;
                     case 2:
+                        PublicKey clave3 = (PublicKey) ois.readObject();
+                        System.out.println("clave crear usuario recibida");
 
+                        mensaje = ois.readObject().toString();
+                        System.out.println(mensaje);
+                        String nombre = br.readLine();
+                        cipher = Cipher.getInstance("RSA");
+                        cipher.init(Cipher.ENCRYPT_MODE, clave3);
+                        //directamente cifrarlo en un array de bytes, y no hacer conversiones a string
+                        mensajeCifrado = cipher.doFinal(nombre.getBytes());
 
+                        oos.writeObject(mensajeCifrado);
+                        mensaje = ois.readObject().toString();
+                        System.out.println(mensaje);
+                        //mandar dni
+                        String dni = br.readLine();
+                        cipher = Cipher.getInstance("RSA");
+                        cipher.init(Cipher.ENCRYPT_MODE, clave3);
+                        //directamente cifrarlo en un array de bytes, y no hacer conversiones a string
+                        mensajeCifrado = cipher.doFinal(dni.getBytes());
+                        oos.writeObject(mensajeCifrado);
+                        //recibier si esta bien o no
+                        mensaje = ois.readObject().toString();
+                        System.out.println(mensaje);
+                        //si esta correcto se sigue adelante
+                        mensaje = ois.readObject().toString();
+                        System.out.println(mensaje);
+                        //mandar email
+                        String email = br.readLine();
+                        cipher = Cipher.getInstance("RSA");
+                        cipher.init(Cipher.ENCRYPT_MODE, clave3);
+                        //directamente cifrarlo en un array de bytes, y no hacer conversiones a string
+                        mensajeCifrado = cipher.doFinal(email.getBytes());
+                        oos.writeObject(mensajeCifrado);
+
+                        //recibir si esta mal o bien
+                        mensaje = ois.readObject().toString();
+                        System.out.println(mensaje);
+                        //seguir adelante en caso de si
+                        mensaje = ois.readObject().toString();
+                        System.out.println(mensaje);
+                        //contra
+                        String contra = br.readLine();
+                        cipher = Cipher.getInstance("RSA");
+                        cipher.init(Cipher.ENCRYPT_MODE, clave3);
+
+                        mensajeCifrado = cipher.doFinal(contra.getBytes());
+                        oos.writeObject(mensajeCifrado);
+                        //siguiente paso
+                        mensaje = ois.readObject().toString();
+                        System.out.println(mensaje);
+                        int edad = Integer.parseInt(br.readLine());
+                        oos.writeObject(edad);
+                        mensaje = ois.readObject().toString();
+                        System.out.println(mensaje);
+                        String usuario = br.readLine();
+                        oos.writeObject(usuario);
                         break;
 
                 }

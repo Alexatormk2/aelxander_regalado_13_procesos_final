@@ -9,7 +9,7 @@ import javax.crypto.NoSuchPaddingException;
 
 
 public class Server_Banco {
-  public static   int usuariosRegistrados = 0;
+    public static int usuariosRegistrados = 0;
     final static int puerto = 5500;
 
     public static Cuenta[] ListaCuentas = new Cuenta[220];
@@ -28,16 +28,14 @@ public class Server_Banco {
             c = s.accept(); //esperando cliente
             Hilo_Banco hiloBanco = new Hilo_Banco(c);
             hiloBanco.start();
-            guardarCuentaDat();
+
+            guardarDatosUsuario();
+            guardarDatosCuentas();
         }
 
     }
 
-    public static void guardarCuentaDat() {
-
-
-    }
-
+   
     public static void cargarUsuarioss() throws IOException {
 //Carga los datos de los dat de usuario a las listas para usarlos despues
         File ficheroUser = new File("usuarios.dat");
@@ -148,7 +146,7 @@ public class Server_Banco {
         for (int a = 0; a < ListaCuentas.length; a++) {
 
             if (ListaCuentas[a] == null) {
-                System.out.println("Lista de bot guardada");
+                System.out.println("Lista de cuentas guardada");
                 break;
             } else {
 

@@ -14,6 +14,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class Hilo_Banco extends Thread {
@@ -70,8 +72,9 @@ public class Hilo_Banco extends Thread {
                             inicioSesion();
                             break;
                         case 2:
-                            System.out.println("opcion 2 sin hacer");
-                            oos.writeObject(mensajeUTF = "Opcion 2 en obras");
+                            CrearUsuario();
+
+
                             break;
                         case 3:
                             System.out.println("Desconectando usuario.....");
@@ -213,19 +216,106 @@ public class Hilo_Banco extends Thread {
         }
     }
 
-   public void CrearCuentasUser() throws IOException {
+    public void CrearUsuario() throws IOException, NoSuchAlgorithmException, ClassNotFoundException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        Matcher matDni = null;
+        Matcher matEmail = null;
+        Matcher matContra = null;
+        Pattern paternDNI = Pattern.compile("^[0-9]{8}[a-zA-Z]{1}$");
+        Pattern paternEmail = Pattern.compile("^(.+)@(.+).[a-zA-Z]{3}$");
+        Pattern paternContraseña = Pattern.compile("^(?=.[a-z].[a-z])(?=.[! \"#...\\d].[!\"#...\\d]).{8,}$");
+
+        //Generamos el par de claves
+        KeyPairGenerator keygen;
+
+        keygen = KeyPairGenerator.getInstance("RSA");
+
+        System.out.println("Generando par de claves");
+        KeyPair par = keygen.generateKeyPair();
+        PrivateKey privada = par.getPrivate();
+        PublicKey publica = par.getPublic();
+        //mandamos la clave publica
+        oos.writeObject(publica);
+        System.out.println("Mandando cla clave2");
+
+        oos.writeObject(mensajeUTF = "Da el nombre de usuario");
 
 
+        byte[] mensaje = (byte[]) ois.readObject();
+        //preparamos el Cipher para descifrar
+
+        Cipher descipher = Cipher.getInstance("RSA");
+        descipher.init(Cipher.DECRYPT_MODE, privada);
+
+        String nombre = new String(descipher.doFinal(mensaje));
+
+        oos.writeObject(mensajeUTF = "Da el dni");
+        mensaje = (byte[]) ois.readObject();
+        descipher = Cipher.getInstance("RSA");
+        descipher.init(Cipher.DECRYPT_MODE, privada);
+        String dni = new String(descipher.doFinal(mensaje));
+        matDni = paternDNI.matcher(dni);
+        if (!matDni.find()) {
+            oos.writeObject(mensajeUTF = "Dni incorrecto");
+        } else {
+            oos.writeObject(mensajeUTF = "DNI correcto");
+            //pasandoa  siguiente paso
+            oos.writeObject(mensajeUTF = "Da el email");
+            mensaje = (byte[]) ois.readObject();
+            descipher = Cipher.getInstance("RSA");
+            descipher.init(Cipher.DECRYPT_MODE, privada);
+            String email = new String(descipher.doFinal(mensaje));
+            matEmail = paternEmail.matcher(email);
+            if (!matEmail.find()) {
+
+                oos.writeObject(mensajeUTF = " Email sin seguir el patron de correo: incorrecto");
+
+            } else {
+                oos.writeObject(mensajeUTF = "Email correcto");
+                //pasando a siguiente paso
+
+                oos.writeObject(mensajeUTF = "Da la contraseña");
+                mensaje = (byte[]) ois.readObject();
+                descipher = Cipher.getInstance("RSA");
+                descipher.init(Cipher.DECRYPT_MODE, privada);
+                String contra = new String(descipher.doFinal(mensaje));
+                matContra = paternContraseña.matcher(contra);
+                if (!matContra.find()) {
+                    oos.writeObject(mensajeUTF = "Contraseña no cumple los requisitos minimos: incorrecto");
+
+                } else {
+
+                    oos.writeObject(mensajeUTF = "Contraseña correcto");
+                    //pasandoa  siguiente paso
+                    oos.writeObject(mensajeUTF = "Da la edad");
+                    int edad = (int) ois.readObject();
+                    oos.writeObject(mensajeUTF = "Da nombre de usuario");
+                    String usuario = (String) ois.readObject();
 
 
-        oos.writeObject(mensajeUTF="Se esta generando el iban de la cuenta espere");
-       IBANGenerator ibanGenerator = new IBANGenerator();
-       System.out.println(ibanGenerator.generateIBAN("Austria"));
+                    Usuarios user = new Usuarios(nombre, usuario, contra, edad, email);
+                    for (int a = 0; a < Server_Banco.ListaUsuarios.length; a++) {
+
+                        if (Server_Banco.ListaUsuarios[a] == null) {
+                            Server_Banco.ListaUsuarios[a] = user;
+                            break;
+                        }
+                    }
+
+                }
+
+            }
+        }
+    }
+
+    public void CrearCuentasUser() throws IOException {
 
 
+        oos.writeObject(mensajeUTF = "Se esta generando el iban de la cuenta espere");
+        IBANGenerator ibanGenerator = new IBANGenerator();
+        System.out.println(ibanGenerator.generateIBAN("Austria"));
 
 
-   }
+    }
 
 
 }
