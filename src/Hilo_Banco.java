@@ -70,10 +70,11 @@ public class Hilo_Banco extends Thread {
                     switch (opcion) {
                         case 1:
                             inicioSesion();
+                            opereacionesBanca();
                             break;
                         case 2:
                             CrearUsuario();
-
+                            opereacionesBanca();
 
                             break;
                         case 3:
@@ -125,6 +126,11 @@ public class Hilo_Banco extends Thread {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Hilo_Banco.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+    }
+
+    public void opereacionesBanca() {
+
 
     }
 
@@ -297,6 +303,7 @@ public class Hilo_Banco extends Thread {
 
                         if (Server_Banco.ListaUsuarios[a] == null) {
                             Server_Banco.ListaUsuarios[a] = user;
+                            CrearCuentasUser();
                             break;
                         }
                     }
@@ -312,7 +319,16 @@ public class Hilo_Banco extends Thread {
 
         oos.writeObject(mensajeUTF = "Se esta generando el iban de la cuenta espere");
         IBANGenerator ibanGenerator = new IBANGenerator();
-        System.out.println(ibanGenerator.generateIBAN("Austria"));
+        String id = ibanGenerator.generateIBAN("Austria");
+
+        Cuenta cuenta = new Cuenta(0, id);
+        for (int a = 0; a < Server_Banco.ListaCuentas.length; a++) {
+
+            if (Server_Banco.ListaCuentas[a] == null) {
+                Server_Banco.ListaCuentas[a] = cuenta;
+                break;
+            }
+        }
 
 
     }
