@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 
@@ -15,16 +16,20 @@ public class Cliente_Banco {
     public static String mensaje;
     public static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     final static int puerto = 5500;
+    static ObjectOutputStream oos;
+    static ObjectInputStream ois;
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        System.setProperty("javax.net.ssl.trustStore", "almacenUser");
+        System.setProperty("javax.net.ssl.trustStorePassword", "123456");
         int opcion = 0;
         while (opcion != 3) {
 
             //Conectamos al cliente
             Socket socket = new Socket("localhost", puerto);
             // Creamos los flujos
-            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+            oos = new ObjectOutputStream(socket.getOutputStream());
+            ois = new ObjectInputStream(socket.getInputStream());
             PublicKey clave = (PublicKey) ois.readObject();
             System.out.println("Leemos la clave");
             //obtenemos la clave publica
@@ -99,7 +104,7 @@ public class Cliente_Banco {
                         oos.writeObject(mensajeCifrado);
 
                         mensaje = ois.readObject().toString();
-
+                        menuOperaciones();
 
                         break;
                     case 2:
@@ -166,13 +171,94 @@ public class Cliente_Banco {
             }
 
 
-            //Ciframos con la clave publica
-
-
             oos.close();
             ois.close();
             socket.close();
         }
+    }
+
+    public static void menuOperaciones() throws IOException, ClassNotFoundException {
+        int opcion = 0;
+        int cuentaOp = 0;
+        ///recibmimos clave 2
+        String mensaje;
+        ////////////////////////////////////////
+        System.out.println("clave2 recibida");
+        PublicKey clave = (PublicKey) ois.readObject();
+        do {
+
+            try {
+
+
+                mensaje = ois.readObject().toString();
+                System.out.println(mensaje);
+                opcion = Integer.parseInt(br.readLine());
+                oos.writeObject(opcion);
+                switch (opcion) {
+
+                    case 1:
+
+                        //recibimos los codigos de las cuentas para selecionar una
+                        mensaje = (String) ois.readObject();
+                        System.out.println(mensaje);
+                        while (!mensaje.equals("salir")) {
+                            System.out.println(mensaje);
+                            mensaje = ois.readObject().toString();
+
+
+                        }
+                        //mandamos opcion seleccionada
+                        cuentaOp = Integer.parseInt(br.readLine());
+                        oos.writeObject(cuentaOp);
+                        //recibir respuesta
+                        mensaje = (String) ois.readObject();
+                        System.out.println(mensaje);
+
+                        break;
+                    case 2:
+                        //ingresar
+                        mensaje = (String) ois.readObject();
+                        System.out.println(mensaje);
+                        //recibimos los codigos de las cuentas para selecionar una
+                        for (int k = 0; k < Server_Banco.ListaCuentas.length; k++) {
+
+                            if (Server_Banco.ListaCuentas[k] == null) {
+
+                                break;
+                            }
+                            mensaje = (String) ois.readObject();
+                            System.out.println(mensaje);
+                        }
+
+                        break;
+                    case 3:
+                        //retirar
+                        mensaje = (String) ois.readObject();
+                        System.out.println(mensaje);
+                        //recibimos los codigos de las cuentas para selecionar una
+                        for (int k = 0; k < Server_Banco.ListaCuentas.length; k++) {
+
+                            if (Server_Banco.ListaCuentas[k] == null) {
+
+                                break;
+                            }
+                            mensaje = (String) ois.readObject();
+                            System.out.println(mensaje);
+                        }
+
+                        break;
+
+                }
+
+            } catch (NumberFormatException e) {
+                System.out.println("se espereba un numero");
+
+            }
+        } while (opcion != 4);
+
+        /////////////////////////////////
+
+
     }
 }
 

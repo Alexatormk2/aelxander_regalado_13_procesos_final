@@ -35,7 +35,7 @@ public class Server_Banco {
 
     }
 
-   
+
     public static void cargarUsuarioss() throws IOException {
 //Carga los datos de los dat de usuario a las listas para usarlos despues
         File ficheroUser = new File("usuarios.dat");

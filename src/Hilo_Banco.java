@@ -34,6 +34,8 @@ public class Hilo_Banco extends Thread {
 
     public void run() {
         try {
+            System.setProperty("javax.net.ssl.keyStore", "AlmacenSSL.jks");
+            System.setProperty("javax.net.ssl.keyStorePassword", "123456");
             oos = new ObjectOutputStream(c.getOutputStream());
             ois = new ObjectInputStream(c.getInputStream());
 
@@ -70,11 +72,11 @@ public class Hilo_Banco extends Thread {
                     switch (opcion) {
                         case 1:
                             inicioSesion();
-                            opereacionesBanca();
+
                             break;
                         case 2:
                             CrearUsuario();
-                            opereacionesBanca();
+
 
                             break;
                         case 3:
@@ -129,10 +131,6 @@ public class Hilo_Banco extends Thread {
 
     }
 
-    public void opereacionesBanca() {
-
-
-    }
 
     public void inicioSesion() throws IOException, NoSuchAlgorithmException {
         try {
@@ -194,13 +192,14 @@ public class Hilo_Banco extends Thread {
                     oos.writeObject(mensajeUTF = "Inicio de sesion con exicto bienvenido: " + Server_Banco.usuarioAactual.nombre);
                     System.out.println(mensaje_descifrado);
 
-                    int opcionMenu = 0;
+                    menu();
 
                 } else {
 
                     oos.writeObject(mensajeUTF = " Error contraseina incorrecta, volviendo a menu principal");
                     System.out.println(mensajeUTF);
                 }
+
             }
 
 
@@ -306,12 +305,102 @@ public class Hilo_Banco extends Thread {
                             CrearCuentasUser();
                             break;
                         }
+
+
                     }
+                    inicioSesion();
 
                 }
 
             }
         }
+    }
+
+    public void menu() throws NoSuchAlgorithmException, IOException, ClassNotFoundException {
+        int cuentaSelec = 0;
+        int opcion = 0;
+        KeyPairGenerator keygen;
+
+        keygen = KeyPairGenerator.getInstance("RSA");
+
+        System.out.println("Generando par de claves");
+        KeyPair par = keygen.generateKeyPair();
+        PrivateKey privada = par.getPrivate();
+        PublicKey publica = par.getPublic();
+        do {
+
+
+            //mandamos la clave publica
+            oos.writeObject(publica);
+            System.out.println("Mandando cla clave2");
+            System.out.println("Saludos que desea hacer:" +
+                    "(1)Ver saldo" +
+                    "(2)Ingresar saldo" +
+                    "(3)Retirar saldo");
+            oos.writeObject(mensajeUTF = "Saludos que desea hacer:" +
+                    "(1)Ver saldo" +
+                    "(2)Ingresar saldo" +
+                    "(3)Retirar saldo");
+            System.out.println("recibir valor");
+            opcion = (int) ois.readObject();
+            int contador = 0;
+            boolean fin = true;
+            int conta = 0;
+            switch (opcion) {
+
+                case 1:
+
+                    oos.writeObject(mensajeUTF = "Selecciona una de las cuentas a ver");
+                    System.out.println(mensajeUTF);
+                    for (contador = 0; contador < Server_Banco.ListaCuentas.length; contador++) {
+
+                        if (Server_Banco.ListaCuentas[contador] == null) {
+                            System.out.println("salir del for");
+                            break;
+                        }
+                    }
+
+                    do {
+                        if (Server_Banco.ListaCuentas[conta] == null) {
+                            oos.writeObject(mensajeUTF = "salir");
+                            System.out.println(mensajeUTF);
+                     break;
+
+                        } else
+                            oos.writeObject(mensajeUTF = conta + "_" + Server_Banco.ListaCuentas[conta].idCuenta);
+                        System.out.println(mensajeUTF);
+                        conta++;
+
+                    }
+
+                    while (true);
+                    System.out.println("afuera de los loops");
+
+                    //recibier opcion por parte de cliente
+                    cuentaSelec = (int) ois.readObject();
+                    System.out.println(cuentaSelec);
+                    oos.writeObject(mensajeUTF = "El saldo de la cuenta es_" + Server_Banco.ListaCuentas[cuentaSelec].saldo);
+
+
+                    break;
+                case 2:
+                    oos.writeObject(mensajeUTF = "Selecciona una de las cuentas a ver");
+                    for (int k = 0; k < Server_Banco.ListaCuentas.length; k++) {
+
+                        if (Server_Banco.ListaCuentas[k] == null) {
+
+                            break;
+                        }
+                        oos.writeObject(mensajeUTF = k + "_" + Server_Banco.ListaCuentas[k].idCuenta);
+                    }
+
+
+                    break;
+
+            }
+
+        } while (opcion != 4);
+
     }
 
     public void CrearCuentasUser() throws IOException {

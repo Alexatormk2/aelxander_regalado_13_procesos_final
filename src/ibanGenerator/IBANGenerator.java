@@ -5,9 +5,7 @@ import com.neovisionaries.i18n.CountryCode;
 import java.util.HashSet;
 import java.util.Set;
 
-/***
- * @author Malik Lalani
- */
+
 public class IBANGenerator {
     // Append 00 for Calculation for Check Digits.
     private static final String DEFAULT_CHECK_DIGITS = "00";

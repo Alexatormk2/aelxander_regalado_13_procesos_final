@@ -12,13 +12,16 @@ public class Crear_DATS {
         FileOutputStream escribirCuenta = new FileOutputStream(fichero);
         ObjectOutputStream itemCuenta = new ObjectOutputStream(escribirCuenta);
 
-        Cuenta cuenta = new Cuenta(999999999, ibanGenerator.generateIBAN("Austria"));
-        Cuenta cuenta2 = new Cuenta(2033, ibanGenerator.generateIBAN("Austria"));
-        Cuenta cuenta3 = new Cuenta(39323, ibanGenerator.generateIBAN("Austria"));
+        Cuenta cuenta = new Cuenta(999999, ibanGenerator.generateIBAN("Austria"));
+        Cuenta cuenta2 = new Cuenta(939, ibanGenerator.generateIBAN("Austria"));
+        Cuenta cuenta3 = new Cuenta(20, ibanGenerator.generateIBAN("Austria"));
+        Cuenta cuenta4 = new Cuenta(0, ibanGenerator.generateIBAN("Austria"));
 
         itemCuenta.writeObject(cuenta);
         itemCuenta.writeObject(cuenta2);
         itemCuenta.writeObject(cuenta3);
+        itemCuenta.writeObject(cuenta4);
+
         itemCuenta.close();
 //crear usuarios por defecto
 
