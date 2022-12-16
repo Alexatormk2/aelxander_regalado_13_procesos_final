@@ -3,6 +3,7 @@ import java.io.*;
 import java.net.Socket;
 
 import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.util.Objects;
@@ -18,6 +19,7 @@ public class Cliente_Banco {
     final static int puerto = 5500;
     static ObjectOutputStream oos;
     static ObjectInputStream ois;
+    static Socket socket;
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         System.setProperty("javax.net.ssl.trustStore", "almacenUser");
@@ -92,14 +94,16 @@ public class Cliente_Banco {
                         oos.writeObject(opcion2);
                         System.out.println("leemos siguietne paso");
                         ///cifrado de contraseina de inicio sesion
+                        /////////////////
                         mensaje = ois.readObject().toString();
                         System.out.println(mensaje);
                         Scanner sc = new Scanner(System.in);
                         String texto = sc.nextLine();
+                        String encri = encriptar(texto);
                         Cipher cipher = Cipher.getInstance("RSA");
                         cipher.init(Cipher.ENCRYPT_MODE, clave2);
                         //directamente cifrarlo en un array de bytes, y no hacer conversiones a string
-                        byte[] mensajeCifrado = cipher.doFinal(texto.getBytes());
+                        byte[] mensajeCifrado = cipher.doFinal(encri.getBytes());
 
                         oos.writeObject(mensajeCifrado);
 
@@ -149,13 +153,15 @@ public class Cliente_Banco {
                         //seguir adelante en caso de si
                         mensaje = ois.readObject().toString();
                         System.out.println(mensaje);
+                        ////////////////////////////
                         //contra
                         String contra = br.readLine();
                         cipher = Cipher.getInstance("RSA");
                         cipher.init(Cipher.ENCRYPT_MODE, clave3);
-
-                        mensajeCifrado = cipher.doFinal(contra.getBytes());
+                        String encri2 = encriptar(contra);
+                        mensajeCifrado = cipher.doFinal(encri2.getBytes());
                         oos.writeObject(mensajeCifrado);
+                        /////////////////////////
                         //siguiente paso
                         mensaje = ois.readObject().toString();
                         System.out.println(mensaje);
@@ -171,6 +177,8 @@ public class Cliente_Banco {
             }
 
 
+            Server_Banco.guardarDatosUsuario();
+            Server_Banco.guardarDatosCuentas();
             oos.close();
             ois.close();
             socket.close();
@@ -192,8 +200,10 @@ public class Cliente_Banco {
 
                 mensaje = ois.readObject().toString();
                 System.out.println(mensaje);
+                System.out.println("dar opcion");
                 opcion = Integer.parseInt(br.readLine());
                 oos.writeObject(opcion);
+                System.out.println("switch comienzo");
                 switch (opcion) {
 
                     case 1:
@@ -219,33 +229,93 @@ public class Cliente_Banco {
                         //ingresar
                         mensaje = (String) ois.readObject();
                         System.out.println(mensaje);
-                        //recibimos los codigos de las cuentas para selecionar una
-                        for (int k = 0; k < Server_Banco.ListaCuentas.length; k++) {
-
-                            if (Server_Banco.ListaCuentas[k] == null) {
-
-                                break;
-                            }
-                            mensaje = (String) ois.readObject();
+                        while (!mensaje.equals("salir")) {
                             System.out.println(mensaje);
-                        }
+                            mensaje = ois.readObject().toString();
 
+
+                        }
+                        cuentaOp = Integer.parseInt(br.readLine());
+                        oos.writeObject(cuentaOp);
+
+                        //recibir respuesta
+                        mensaje = (String) ois.readObject();
+                        System.out.println(mensaje);
+                        double ingresar = Integer.parseInt(br.readLine());
+                        oos.writeObject(ingresar);
+
+
+                        mensaje = ois.readObject().toString();
+                        System.out.println(mensaje);
                         break;
                     case 3:
                         //retirar
                         mensaje = (String) ois.readObject();
                         System.out.println(mensaje);
-                        //recibimos los codigos de las cuentas para selecionar una
-                        for (int k = 0; k < Server_Banco.ListaCuentas.length; k++) {
-
-                            if (Server_Banco.ListaCuentas[k] == null) {
-
-                                break;
-                            }
-                            mensaje = (String) ois.readObject();
+                        while (!mensaje.equals("salir")) {
                             System.out.println(mensaje);
+                            mensaje = ois.readObject().toString();
+
+
+                        }
+                        cuentaOp = Integer.parseInt(br.readLine());
+                        oos.writeObject(cuentaOp);
+
+                        //recibir valores
+                        mensaje = (String) ois.readObject();
+                        System.out.println(mensaje);
+                        double retirar = Integer.parseInt(br.readLine());
+                        oos.writeObject(retirar);
+
+
+                        mensaje = ois.readObject().toString();
+                        System.out.println(mensaje);
+
+                        break;
+                    case 4:
+//transferir
+                        mensaje = (String) ois.readObject();
+                        System.out.println(mensaje);
+                        while (!mensaje.equals("salir")) {
+                            System.out.println(mensaje);
+                            mensaje = ois.readObject().toString();
                         }
 
+                        cuentaOp = Integer.parseInt(br.readLine());
+                        oos.writeObject(cuentaOp);
+                        System.out.println("afuera loop parte 1 de transferencia");
+                        //recibir valores
+                        mensaje = (String) ois.readObject();
+                        System.out.println(mensaje);
+                        double transferir = Integer.parseInt(br.readLine());
+                        oos.writeObject(transferir);
+
+
+                        mensaje = ois.readObject().toString();
+                        System.out.println(mensaje);
+
+//cuenta que recibe
+                        mensaje = (String) ois.readObject();
+                        System.out.println(mensaje);
+                        while (!mensaje.equals("salir")) {
+                            System.out.println(mensaje);
+                            mensaje = ois.readObject().toString();
+
+
+                        }
+                        cuentaOp = Integer.parseInt(br.readLine());
+                        oos.writeObject(cuentaOp);
+                        mensaje = ois.readObject().toString();
+                        System.out.println(mensaje);
+
+                        break;
+                    case 5:
+
+                        Server_Banco.guardarDatosUsuario();
+                        Server_Banco.guardarDatosCuentas();
+                        oos.close();
+                        ois.close();
+                        socket.close();
                         break;
 
                 }
@@ -254,11 +324,42 @@ public class Cliente_Banco {
                 System.out.println("se espereba un numero");
 
             }
-        } while (opcion != 4);
+        } while (opcion != 5);
 
         /////////////////////////////////
 
+    }
+
+    static String encriptar(String contra) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+
+
+        byte[] contraArray = HASHManager.getDigest(contra.getBytes("UTF-8"));
+        String resumen = "";
+
+        for (int i = 0; i < contraArray.length; i++) {
+
+            System.out.println(contraArray[i]);
+            resumen = resumen + contraArray[i] + ",";
+        }
+        return resumen;
 
     }
+
+    public class HASHManager {
+
+        private static final String ALGORITMO = "SHA-256";
+
+        public static byte[] getDigest(byte[] mensaje) throws NoSuchAlgorithmException {
+            byte[] resumen = null;
+            MessageDigest algoritmo = MessageDigest.getInstance(ALGORITMO);
+
+            algoritmo.reset();
+            algoritmo.update(mensaje);
+            resumen = algoritmo.digest();
+            return resumen;
+        }
+
+    }
+
 }
 

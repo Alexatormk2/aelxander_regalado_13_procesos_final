@@ -34,6 +34,8 @@ public class Hilo_Banco extends Thread {
 
     public void run() {
         try {
+
+
             System.setProperty("javax.net.ssl.keyStore", "AlmacenSSL.jks");
             System.setProperty("javax.net.ssl.keyStorePassword", "123456");
             oos = new ObjectOutputStream(c.getOutputStream());
@@ -196,8 +198,9 @@ public class Hilo_Banco extends Thread {
 
                 } else {
 
-                    oos.writeObject(mensajeUTF = " Error contraseina incorrecta, volviendo a menu principal");
+                    oos.writeObject(mensajeUTF = " Error contraseina incorrecta, saliendo ;D");
                     System.out.println(mensajeUTF);
+
                 }
 
             }
@@ -260,7 +263,8 @@ public class Hilo_Banco extends Thread {
         String dni = new String(descipher.doFinal(mensaje));
         matDni = paternDNI.matcher(dni);
         if (!matDni.find()) {
-            oos.writeObject(mensajeUTF = "Dni incorrecto");
+            oos.writeObject(mensajeUTF = "Dni incorrecto__ cerrdando ;D");
+            Cliente_Banco.socket.close();
         } else {
             oos.writeObject(mensajeUTF = "DNI correcto");
             //pasandoa  siguiente paso
@@ -272,8 +276,9 @@ public class Hilo_Banco extends Thread {
             matEmail = paternEmail.matcher(email);
             if (!matEmail.find()) {
 
-                oos.writeObject(mensajeUTF = " Email sin seguir el patron de correo: incorrecto");
+                oos.writeObject(mensajeUTF = " Email sin seguir el patron de correo: incorrecto--- cerranado :D");
 
+                Cliente_Banco.socket.close();
             } else {
                 oos.writeObject(mensajeUTF = "Email correcto");
                 //pasando a siguiente paso
@@ -285,8 +290,8 @@ public class Hilo_Banco extends Thread {
                 String contra = new String(descipher.doFinal(mensaje));
                 matContra = paternContraseña.matcher(contra);
                 if (!matContra.find()) {
-                    oos.writeObject(mensajeUTF = "Contraseña no cumple los requisitos minimos: incorrecto");
-
+                    oos.writeObject(mensajeUTF = "Contraseña no cumple los requisitos minimos: incorrecto__cerrando");
+                    Cliente_Banco.socket.close();
                 } else {
 
                     oos.writeObject(mensajeUTF = "Contraseña correcto");
@@ -340,7 +345,9 @@ public class Hilo_Banco extends Thread {
             oos.writeObject(mensajeUTF = "Saludos que desea hacer:" +
                     "(1)Ver saldo" +
                     "(2)Ingresar saldo" +
-                    "(3)Retirar saldo");
+                    "(3)Retirar saldo" +
+                    "(4)Transferencia" +
+                    "(5)Salir");
             System.out.println("recibir valor");
             opcion = (int) ois.readObject();
             int contador = 0;
@@ -364,7 +371,7 @@ public class Hilo_Banco extends Thread {
                         if (Server_Banco.ListaCuentas[conta] == null) {
                             oos.writeObject(mensajeUTF = "salir");
                             System.out.println(mensajeUTF);
-                     break;
+                            break;
 
                         } else
                             oos.writeObject(mensajeUTF = conta + "_" + Server_Banco.ListaCuentas[conta].idCuenta);
@@ -385,21 +392,158 @@ public class Hilo_Banco extends Thread {
                     break;
                 case 2:
                     oos.writeObject(mensajeUTF = "Selecciona una de las cuentas a ver");
-                    for (int k = 0; k < Server_Banco.ListaCuentas.length; k++) {
+                    System.out.println(mensajeUTF);
+                    for (contador = 0; contador < Server_Banco.ListaCuentas.length; contador++) {
 
-                        if (Server_Banco.ListaCuentas[k] == null) {
-
+                        if (Server_Banco.ListaCuentas[contador] == null) {
+                            System.out.println("salir del for");
                             break;
                         }
-                        oos.writeObject(mensajeUTF = k + "_" + Server_Banco.ListaCuentas[k].idCuenta);
                     }
 
+                    do {
+                        if (Server_Banco.ListaCuentas[conta] == null) {
+                            oos.writeObject(mensajeUTF = "salir");
+                            System.out.println(mensajeUTF);
+                            break;
+
+                        } else
+                            oos.writeObject(mensajeUTF = conta + "_" + Server_Banco.ListaCuentas[conta].idCuenta);
+                        System.out.println(mensajeUTF);
+                        conta++;
+
+                    }
+
+                    while (true);
+                    System.out.println("afuera de los loops");
+
+                    //recibier opcion por parte de cliente
+                    cuentaSelec = (int) ois.readObject();
+                    System.out.println(cuentaSelec);
+                    oos.writeObject(mensajeUTF = "Cuanto quieres ingresar");
+//recibir cantidad
+                    double ingresar = (double) ois.readObject();
+                    ingresar = Server_Banco.ListaCuentas[cuentaSelec].saldo + ingresar;
+                    Server_Banco.ListaCuentas[cuentaSelec].setSaldo(ingresar);
+                    oos.writeObject(mensajeUTF = "La cantidad a sido ingresada, saldo de la cuenta es_" + Server_Banco.ListaCuentas[cuentaSelec].saldo);
+
+                    break;
+                case 3:
+///retirar
+                    oos.writeObject(mensajeUTF = "Selecciona una de las cuentas a retirar saldo");
+                    System.out.println(mensajeUTF);
+                    for (contador = 0; contador < Server_Banco.ListaCuentas.length; contador++) {
+
+                        if (Server_Banco.ListaCuentas[contador] == null) {
+                            System.out.println("salir del for");
+                            break;
+                        }
+                    }
+
+                    do {
+                        if (Server_Banco.ListaCuentas[conta] == null) {
+                            oos.writeObject(mensajeUTF = "salir");
+                            System.out.println(mensajeUTF);
+                            break;
+
+                        } else
+                            oos.writeObject(mensajeUTF = conta + "_" + Server_Banco.ListaCuentas[conta].idCuenta);
+                        System.out.println(mensajeUTF);
+                        conta++;
+
+                    }
+
+                    while (true);
+                    System.out.println("afuera de los loops");
+
+                    //recibier opcion por parte de cliente
+                    cuentaSelec = (int) ois.readObject();
+                    System.out.println(cuentaSelec);
+                    oos.writeObject(mensajeUTF = "Cuanto quieres ingresar");
+//recibir cantidad
+                    double restar = (double) ois.readObject();
+                    restar = Server_Banco.ListaCuentas[cuentaSelec].saldo - restar;
+                    Server_Banco.ListaCuentas[cuentaSelec].setSaldo(restar);
+                    oos.writeObject(mensajeUTF = "La cantidad a sido retirada, saldo de la cuenta es_" + Server_Banco.ListaCuentas[cuentaSelec].saldo);
+
+                    break;
+                case 4:
+                    //transferir
+                    oos.writeObject(mensajeUTF = "Selecciona la cuentas para empezar a transferir");
+                    System.out.println(mensajeUTF);
+                    for (contador = 0; contador < Server_Banco.ListaCuentas.length; contador++) {
+
+                        if (Server_Banco.ListaCuentas[contador] == null) {
+                            System.out.println("salir del for");
+                            break;
+                        }
+                    }
+
+                    do {
+                        if (Server_Banco.ListaCuentas[conta] == null) {
+
+                            oos.writeObject(mensajeUTF = "salir");
+                            System.out.println(mensajeUTF);
+                            break;
+
+                        } else {
+                            oos.writeObject(mensajeUTF = conta + "_" + Server_Banco.ListaCuentas[conta].idCuenta);
+                            System.out.println(mensajeUTF);
+                            conta++;
+                        }
+
+                    }
+
+                    while (true);
+                    System.out.println("afuera de los loops");
+
+                    //recibier opcion por parte de cliente
+                    cuentaSelec = (int) ois.readObject();
+                    System.out.println("aaa" + cuentaSelec);
+                    System.out.println(cuentaSelec);
+                    oos.writeObject(mensajeUTF = "Cuanto quieres transferir");
+//recibir cantidad
+                    double transfeir = (double) ois.readObject();
+                    transfeir = Server_Banco.ListaCuentas[cuentaSelec].saldo - transfeir;
+                    Server_Banco.ListaCuentas[cuentaSelec].setSaldo(transfeir);
+                    oos.writeObject(mensajeUTF = "Seleciona la cuenta que lo recibe");
+                    conta = 0;
+
+                    do {
+                        if (conta == cuentaSelec) {
+                            System.out.println(" ");
+                        }
+                        if (Server_Banco.ListaCuentas[conta] == null) {
+                            oos.writeObject(mensajeUTF = "salir");
+                            System.out.println(mensajeUTF);
+
+                            break;
+
+                        } else {
+                            oos.writeObject(mensajeUTF = conta + "_" + Server_Banco.ListaCuentas[conta].idCuenta);
+                            System.out.println(mensajeUTF);
+                            conta++;
+                        }
+                    }
+
+                    while (true);
+
+                    System.out.println("afuera de los loops");
+
+                    //recibier opcion por parte de cliente
+                    int cuentatr = (int) ois.readObject();
+                    System.out.println(cuentatr);
+
+                    transfeir = Server_Banco.ListaCuentas[cuentatr].saldo + transfeir;
+                    Server_Banco.ListaCuentas[cuentatr].setSaldo(transfeir);
+                    oos.writeObject(mensajeUTF = "La cantidad a sido transferidad, saldo de la cuenta es_" + Server_Banco.ListaCuentas[cuentatr].saldo);
 
                     break;
 
+
             }
 
-        } while (opcion != 4);
+        } while (opcion != 5);
 
     }
 

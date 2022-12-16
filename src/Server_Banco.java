@@ -88,7 +88,7 @@ public class Server_Banco {
 
                 Cuenta c = new Cuenta(saldo, idCuenta);
                 ListaCuentas[ax] = c;
-                aj++;
+                ax++;
 
             }
         } catch (EOFException e) {
@@ -138,7 +138,7 @@ public class Server_Banco {
 
     public static void guardarDatosCuentas() throws IOException {
         //Coge los datos de las listas los vuelve a meter al dat
-        File ficheroCuenta = new File(".//BOT.dat");
+        File ficheroCuenta = new File(".//cuenta.dat");
         FileOutputStream escribirCuenta = new FileOutputStream(ficheroCuenta);
         ObjectOutputStream itemCuenta = new ObjectOutputStream(escribirCuenta);
 
