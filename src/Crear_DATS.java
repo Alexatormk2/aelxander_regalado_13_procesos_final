@@ -44,7 +44,7 @@ public class Crear_DATS {
         //crear normas
 
 
-        File ficheroNormas = new File("   readme.txt");
+        File ficheroNormas = new File("readme.txt");
         FileOutputStream escribirNormas = new FileOutputStream(ficheroNormas);
         ObjectOutputStream itemnormas = new ObjectOutputStream(escribirNormas);
 
