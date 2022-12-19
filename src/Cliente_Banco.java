@@ -108,6 +108,7 @@ public class Cliente_Banco {
                         oos.writeObject(mensajeCifrado);
 
                         mensaje = ois.readObject().toString();
+                        
                         Runtime.getRuntime().exec("Notepad.exe readmne.txt");
                         System.out.println("Acepta las normas ?" +
                                 "1.SI" +
