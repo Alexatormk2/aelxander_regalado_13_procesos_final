@@ -41,6 +41,23 @@ public class Crear_DATS {
         itemUser.writeObject(usuarios2);
         itemUser.close();
 
+        //crear normas
+
+
+        File ficheroNormas = new File("   readme.txt");
+        FileOutputStream escribirNormas = new FileOutputStream(ficheroNormas);
+        ObjectOutputStream itemnormas = new ObjectOutputStream(escribirNormas);
+
+
+        Normas normas1 = new Normas("1.Se deben respetar a los otros usuarios");
+        Normas normas2 = new Normas("2.No transferir dinero pagado en negro");
+        Normas normas3 = new Normas("3.Pagar las deudas a timpo");
+
+        itemnormas.writeObject(normas1.normas);
+        itemnormas.writeObject(normas2.normas);
+        itemnormas.writeObject(normas3.normas);
+        itemnormas.close();
+
     }
 
     static String encriptar(String contra) throws UnsupportedEncodingException, NoSuchAlgorithmException {

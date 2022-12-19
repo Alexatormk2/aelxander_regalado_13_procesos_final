@@ -9,6 +9,8 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import java.io.*;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -221,6 +223,8 @@ public class Hilo_Banco extends Thread {
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
+        } catch (SignatureException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -321,7 +325,7 @@ public class Hilo_Banco extends Thread {
         }
     }
 
-    public void menu() throws NoSuchAlgorithmException, IOException, ClassNotFoundException {
+    public void menu() throws NoSuchAlgorithmException, IOException, ClassNotFoundException, InvalidKeyException, SignatureException {
         int cuentaSelec = 0;
         int opcion = 0;
         KeyPairGenerator keygen;
@@ -333,6 +337,15 @@ public class Hilo_Banco extends Thread {
         PrivateKey privada = par.getPrivate();
         PublicKey publica = par.getPublic();
         do {
+            //firma
+            Signature dsa = Signature.getInstance("SHA1withDSA");
+            dsa.initSign(privada);
+            String mensaje = "Normas del banco" +
+                    "1.Se deben repestar a los otros usuarios" +
+                    "2: Intentar no dejar una cuenta com as de 8 digitos de deuda";
+            dsa.update(mensaje.getBytes());
+            byte[] firma = dsa.sign(); //MENSAJE FIRMADO
+            oos.writeObject(firma);
 
 
             //mandamos la clave publica

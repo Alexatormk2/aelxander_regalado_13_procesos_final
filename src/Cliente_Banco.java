@@ -2,10 +2,10 @@ import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 
-import java.security.InvalidKeyException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.*;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Objects;
 import java.util.Scanner;
 import javax.crypto.BadPaddingException;
@@ -21,7 +21,7 @@ public class Cliente_Banco {
     static ObjectInputStream ois;
     static Socket socket;
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, SignatureException {
         System.setProperty("javax.net.ssl.trustStore", "almacenUser");
         System.setProperty("javax.net.ssl.trustStorePassword", "123456");
         int opcion = 0;
@@ -108,6 +108,24 @@ public class Cliente_Banco {
                         oos.writeObject(mensajeCifrado);
 
                         mensaje = ois.readObject().toString();
+                        Runtime.getRuntime().exec("Notepad.exe readmne.txt");
+                        System.out.println("Acepta las normas ?" +
+                                "1.SI" +
+                                "2.No");
+                        int normas = 0;
+                        normas = Integer.parseInt(br.readLine());
+                        switch (normas) {
+                            case 1:
+                                System.out.println("Cargando menu de usuario");
+                                break;
+
+                            case 2:
+                                System.out.println("Cerrando programa");
+                                System.exit(0);
+                                break;
+
+                        }
+
                         menuOperaciones();
 
                         break;
@@ -186,12 +204,15 @@ public class Cliente_Banco {
     }
 
     public static void menuOperaciones() throws IOException, ClassNotFoundException {
+
+
         int opcion = 0;
         int cuentaOp = 0;
         ///recibmimos clave 2
         String mensaje;
         ////////////////////////////////////////
         System.out.println("clave2 recibida");
+
         PublicKey clave = (PublicKey) ois.readObject();
         do {
 
@@ -344,6 +365,7 @@ public class Cliente_Banco {
         return resumen;
 
     }
+
 
     public class HASHManager {
 
