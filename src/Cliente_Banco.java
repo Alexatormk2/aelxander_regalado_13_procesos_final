@@ -109,7 +109,7 @@ public class Cliente_Banco {
 
                         mensaje = ois.readObject().toString();
                         
-                        Runtime.getRuntime().exec("Notepad.exe readmne.txt");
+                        Runtime.getRuntime().exec("Notepad.exe readme.txt");
                         System.out.println("Acepta las normas ?" +
                                 "1.SI" +
                                 "2.No");
