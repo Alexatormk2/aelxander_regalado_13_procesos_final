@@ -16,10 +16,10 @@ public class verificar {
             byte[] digitalSignature = Files.readAllBytes(Paths.get("signature"));
 
             X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicKeyEncoded);
-            KeyFactory keyFactory = KeyFactory.getInstance("DSA", "SUN");
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 
             PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
-            Signature signature = Signature.getInstance("SHA1withDSA", "SUN");
+            Signature signature = Signature.getInstance("SHA1withRSA");
             signature.initVerify(publicKey);
 
             byte[] bytes = Files.readAllBytes(Paths.get("readme.txt"));

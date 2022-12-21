@@ -338,14 +338,7 @@ public class Hilo_Banco extends Thread {
         PublicKey publica = par.getPublic();
         do {
             //firma
-            Signature dsa = Signature.getInstance("SHA1withDSA");
-            dsa.initSign(privada);
-            String mensaje = "Normas del banco" +
-                    "1.Se deben repestar a los otros usuarios" +
-                    "2: Intentar no dejar una cuenta com as de 8 digitos de deuda";
-            dsa.update(mensaje.getBytes());
-            byte[] firma = dsa.sign(); //MENSAJE FIRMADO
-            oos.writeObject(firma);
+
 
 
             //mandamos la clave publica

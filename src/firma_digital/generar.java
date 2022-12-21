@@ -9,8 +9,8 @@ public class generar {
         public static void main(String[] args) {
             try {
                 // Get instance and initialize a KeyPairGenerator object.
-                KeyPairGenerator keyGen = KeyPairGenerator.getInstance("DSA", "SUN");
-                SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
+                KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+                SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
                 keyGen.initialize(1024, random);
 
                 // Get a PrivateKey from the generated key pair.
@@ -18,7 +18,7 @@ public class generar {
                 PrivateKey privateKey = keyPair.getPrivate();
 
                 // Get an instance of Signature object and initialize it.
-                Signature signature = Signature.getInstance("SHA1withDSA", "SUN");
+                Signature signature = Signature.getInstance("SHA1withRSA");
                 signature.initSign(privateKey);
 
                 // Supply the data to be signed to the Signature object

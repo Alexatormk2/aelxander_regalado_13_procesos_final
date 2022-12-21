@@ -36,7 +36,7 @@ public class Cliente_Banco {
             System.out.println("Leemos la clave");
             //obtenemos la clave publica
 
-            System.out.println("La clave recibida es: " + clave);
+
 
 
             System.out.println("sdkjgjdasdflhkds.kffkkf");
